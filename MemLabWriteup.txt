@@ -1,0 +1,353 @@
+Beginner's Luck
+
+Commands :
+
+First Flag:
+1 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 pslist
+
+2 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 consoles
+
+3 echo 'ZmxhZ3t0aDFzXzFzX3RoM18xc3Rfc3Q0ZzMhIX0=' | base64 -d
+
+Flag : flag{th1s_1s_th3_1st_st4g3!!}
+
+
+Second Flag:
+
+1 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 pslist
+
+2 mkdir output
+
+3 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 memdump -p 2424 -D output/
+
+4 mv 2424.dmp paint.data
+
+5 gimp paint.data &
+
+Note Play in the Width and hight to get the flag 
+
+prefect hight is widht : 3200 hight : 973
+
+
+then press open then view-->Flip-->Vertically
+
+There the flag
+
+Flag: flag{Good__BoY_good__girl}
+
+
+
+Third Flag:
+
+to Search for only rar file 
+1 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 filescan | grep '.*\.rar$'
+
+to dump rar files
+2 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 dumpfiles -Q 0x000000003fa3ebc0 -D output/
+
+3  mv file.None.0xfffffa8001034450.dat Ahmed.rar
+ 
+needs password  
+to dump hashes 
+
+ 
+4 vol.py -f MemoryDump_Lab1.raw --profile=Win7SP1x64 hashdump
+
+he want it in upper letter so write script for it 
+
+Script :  'f4ff64c8baac57d22f22edc681055ba6'.upper()
+
+run it then unrar using the hash 
+
+
+Flag : flag{w3ll_3rd_stage_was_easy}
+
+
+
+
+2 A New World 
+
+
+Commands : 
+
+First Flag:
+
+Note he did put "environmental" bettwen 2 ""
+
+so search for envars
+
+1 vol.py -f MemoryDump_Lab2.raw --profile=Win7SP1x64 envars
+
+you will find base64 string decode it
+
+2 echo 'ZmxhZ3t3M2xjMG0zX1QwXyRUNGczXyFfT2ZfTDRCXzJ9' | base64 -d
+
+
+Flag : flag{w3lc0m3_T0_$T4g3_!_Of_L4B_2}
+
+
+
+
+Second Flag:
+
+search for kdb exestantion
+
+1 vol.py -f MemoryDump_Lab2.raw --profile=Win7SP1x64 filescan | grep kdbx
+
+2  vol.py -f MemoryDump_Lab2.raw --profile=Win7SP1x64 dumpfiles -Q 0x000000003fb112a0 -D output/
+
+3 mv * hidden.kdbx
+
+4 vol.py -f MemoryDump_Lab2.raw --profile=Win7SP1x64 filescan | grep password -i
+
+5  vol.py -f MemoryDump_Lab2.raw --profile=Win7SP1x64 dumpfiles -Q 0x000000003fce1c70 -D output/
+
+6  mv file.None.0xfffffa8000d06e10.dat password.png
+
+7  eog password.png  
+
+P4SSw0rd_123
+
+open using password manger 
+  
+
+flag : flag{w0w_this_Is_th3_seC0nD_ST4g3_!!}
+
+
+Third Flag: 
+
+
+1 git clone https://github.com/superponible/volatility-plugins.git
+
+2 vol.py --plugins=volatility-plugins/ -f MemoryDump_Lab2.raw --profile=Win7SP1x64 chromehistory
+
+there mega file downlad it 
+
+to get pass
+3  echo -n flag{w3ll_3rd_stage_was_easy} | sha1sum 
+ 
+Flag : flag{oK_So_Now_St4g3_3_is_DoNE!!}
+
+
+
+
+3   The Evil's Den 
+
+that is a hard one 
+
+commands : 
+
+
+1 vol.py -f MemoryDump_Lab3.raw imageinfo
+
+2 vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 pslist
+
+3 vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 cmdline
+
+you will find evilscript.py 
+
+lets dump it
+4  vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 filescan | grep evilscript.py
+
+5 mkdir output
+
+6  vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 dumpfiles -Q 0x000000003de1b5f0 -D output/
+
+7 cd output/
+
+8 mv file.None.0xbc2b6af0.dat evilscript.py
+
+you will find in the script vip.txt
+
+9  vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 filescan | grep vip.txt
+
+10 vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 dumpfiles -Q 0x000000003e727e50 -D output/
+
+11 cd output/
+
+12  mv file.None.0x83e52420.dat vip.txt
+
+lets make script to decode it 
+
+script :
+
+x = 'am1gd2V4M20wXGs3b2U='
+
+x = x.decode("base64")
+
+flag = ''.join(chr(ord(i)^3) for i in x)
+
+print(flag)
+ 
+14 python decode.py 
+
+we have the first part of the flag
+
+steghide is jpeg 
+
+lets search for it 
+
+15 vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 filescan | grep jpeg
+
+16  vol.py -f MemoryDump_Lab3.raw --profile=Win7SP1x86_23418 dumpfiles -Q 0x0000000004f34148 -D output/
+
+17  mv file.None.0x843fcf38.dat evil.jpeg
+
+18 steghide extract -sf evil.jpeg 
+
+pass phrase is the first half of the flag
+
+19 cat 'secret text' 
+
+there is the second part of the flag
+
+
+the flag : inctf{0n3_h4lf_1s_n0t_3n0ugh}
+
+
+
+
+
+
+
+4 Obsession
+
+you can solve it from https://blog.bi0s.in/2019/09/24/Forensics/InCTFi19-JustDoIt/
+
+commands : 
+
+1 vol.py -f MemoryDump_Lab4.raw imageinfo
+
+2  vol.py -f MemoryDump_Lab4.raw --profile=Win7SP1x64 pslist
+  
+
+3  vol.py -f MemoryDump_Lab4.raw --profile=Win7SP1x64 filescan | grep Desktop
+
+ i couldnot dump it becuse it was deleted
+
+so i found this blog  https://blog.bi0s.in/2019/09/24/Forensics/InCTFi19-JustDoIt/
+
+4 vol.py -f MemoryDump_Lab4.raw --profile=Win7SP1x64 mftparser > mft_output.txt
+
+5 nano mft_output.txt
+
+press CTRl+W search for Important.txt
+
+
+flag : inctf{1_is_n0t_EQu4l_7o_2_bUt_th1s_d0s3nt_m4ke_s3ns3}
+
+
+
+
+5 Black Tuesday 
+
+commands : 
+
+
+1 vol.py -f MemoryDump_Lab5.raw imageinfo
+
+2  vol.py -f MemoryDump_Lab5.raw --profile=Win7SP1x64 pslist
+  
+3 vol.py -f  MemoryDump_Lab5.raw --profile=Win7SP1x64 iehistory
+
+you will find base64 string decode it 
+
+first flag : flag{!!_w3LL_d0n3_St4g3-1_0f_L4B_5_D0n3_!!}
+
+
+
+4  vol.py -f  MemoryDump_Lab5.raw --profile=Win7SP1x64 filescan | grep '.*\.rar$'
+
+5  vol.py -f  MemoryDump_Lab5.raw --profile=Win7SP1x64 dumpfiles - Q 0x000000003eed56f0 -D output/
+
+6 mv file.None.0xfffffa80010b44f0.dat evil.rar
+
+7 unrar e evil.rar 
+
+pass first flag  
+
+second flag : flag{W1th_th1s_$taGe_2_1s_c0mPL3T3_!!}
+
+
+
+6 
+
+
+
+1 vol.py -f MemoryDump_Lab6.raw imageinfo
+
+2 vol.py -f MemoryDump_Lab6.raw --profile=Win7SP1x64 pslist
+  
+3  git clone https://github.com/superponible/volatility-plugins.git
+
+4 vol.py --plugins=volatility-plugins/ -f MemoryDump_Lab2.raw --profile=Win7SP1x64 chromehistory
+
+you will find wired link https://pastebin.com/RSGSi1hk
+
+then it will have another link https://www.google.com/url?q=https://docs.google.com/document/d/1lptcksPt1l_w7Y29V4o6vkEnHToAPqiCkgNNZfS9rCk/edit?usp%3Dsharing&sa=D&source=hangouts&ust=1566208765722000&usg=AFQjCNHXd6Ck6F22MNQEsxdZo21JayPKug
+
+then at page 4 it will have another link  https://mega.nz/#!SrxQxYTQ 
+
+it will need a decrypt key 
+
+5  strings MemoryDump_Lab6.raw | grep 'Mega Drive Key'
+
+you will find
+
+THE KEY IS zyWxCjCYYSEMA-hZe552qWVXiPwa5TecODbjnsscMIU
+
+downlad the image it will be corapted 
+
+open hex idetor you will see its all good exept one 69 change to 49 the real png hex format
+
+
+first part of the flag : inctf{thi5_cH4LL3Ng3_!s_g0nn4_b3_?
+
+6 vol.py -f MemoryDump_Lab6.raw --profile=Win7SP1x64 consoles
+
+you will see envar 
+
+7 vol.py -f MemoryDump_Lab6.raw --profile=Win7SP1x64 envars
+ 
+you will see
+
+RAR password                   easypeasyvirus
+
+8 vol.py -f  MemoryDump_Lab6.raw --profile=Win7SP1x64 filescan | grep '.*\.rar$'
+
+9 mkdir output
+ 
+10 vol.py -f MemoryDump_Lab6.raw --profile=Win7SP1x64 dumpfiles -Q 0x000000005fcfc4b0 -D output/
+
+11 mv file.None.0xfffffa800138d750.dat evil.rar
+
+12 unrar e evil.rar 
+
+use pass fro envars
+
+13 xdg-open flag2.png 
+
+
+rest of the flag aN_Am4zINg_!_i_gU3Ss???_}
+
+full Flag : inctf{thi5_cH4LL3Ng3_!s_g0nn4_b3_?_aN_Am4zINg_!_i_gU3Ss???_}
+
+
+
+
+THAT WAS HARDDDD
+
+
+
+
+
+
+Links helped me Solve :
+
+https://www.youtube.com/playlist?list=PLDyW0GpJbH0tARjxMpeM4n6Ix5GRxcwwo
+https://hexed.it/
+https://blog.bi0s.in/2019/09/24/Forensics/InCTFi19-JustDoIt/
+https://github.com/volatilityfoundation/volatility/blob/master/vol.py
+
+
+Written By Ahmed Shams 
